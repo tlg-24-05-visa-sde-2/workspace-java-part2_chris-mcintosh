@@ -27,8 +27,10 @@ public class SalariedEmployee extends Employee {
     }
 
     @Override
-    public void pay() {
+    public double pay() {
+        double payment = getSalary();
         System.out.println(getName() + " is paid salary " + getSalary());
+        return payment;
     }
 
     @Override  // interface TaxPayer
