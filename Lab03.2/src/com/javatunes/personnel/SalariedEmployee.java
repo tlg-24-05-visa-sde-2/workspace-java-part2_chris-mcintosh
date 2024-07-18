@@ -60,8 +60,8 @@ public class SalariedEmployee extends Employee {
         boolean result = false;
         if (obj instanceof SalariedEmployee) {
             SalariedEmployee other = (SalariedEmployee) obj;
-            result = super.equals(obj) &&
-                     Objects.equals(this.getSalary(), other.getSalary());
+            result = super.equals(obj);
+                     //Objects.equals(this.getSalary(), other.getSalary());
         }
         return result;
     }

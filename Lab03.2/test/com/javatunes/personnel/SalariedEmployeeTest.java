@@ -1,20 +1,49 @@
 package com.javatunes.personnel;
 
-import junit.framework.TestCase;
+
 import org.junit.Before;
 import org.junit.Test;
-
 import java.sql.Date;
-
 import static org.junit.Assert.*;
 
-public class SalariedEmployeeTest extends TestCase {
+public class SalariedEmployeeTest {
     private SalariedEmployee emp;
+    private SalariedEmployee emp2;
 
     @Before
     public void setUp(){
-        emp = new SalariedEmployee("Logan", Date.valueOf("2020-10-01"), 1500.0 );
-            }
+        emp  = new SalariedEmployee("Logan", Date.valueOf("2020-10-01"), 1500.0 );
+        emp2 = new SalariedEmployee("Logan", Date.valueOf("2020-10-01"), 1500.0 );
+    }
+
+    @Test
+    public void equals_shouldReturnFalse_differentName_sameHireDate_sameSalary() {
+        emp2.setName("Levin");
+
+        assertNotEquals(emp, emp2);
+        assertFalse(emp.equals(emp2));
+    }
+
+    @Test
+    public void equals_shouldReturnFalse_sameName_differentHireDate_sameSalary() {
+        emp.setHireDate(Date.valueOf("2022-02-01"));
+
+        assertNotEquals(emp, emp2);
+    }
+
+    @Test
+    public void equals_shouldReturnFalse_sameName_sameHireDate_differentSalary() {
+        emp2.setSalary(1299.0);
+
+        assertEquals(emp2, emp);
+        assertFalse(emp.equals(emp2)); //alternative
+    }
+
+    @Test
+    public void equals_shouldReturnTrue_allPropertiesSame() {
+        assertEquals(emp, emp2);  //assertEquals() for objects does a .equals() check
+        assertTrue(emp.equals(emp2));  //alternative assertion
+    }
 
     @Test
     public void testPayTaxes() {
