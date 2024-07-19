@@ -8,6 +8,7 @@
 
 package com.javatunes.catalog;
 
+
 import java.util.*;
 
 // OF COURSE THIS CLASS DOESN'T COMPILE
