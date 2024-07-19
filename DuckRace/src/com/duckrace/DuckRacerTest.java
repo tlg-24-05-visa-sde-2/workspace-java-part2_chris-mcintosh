@@ -18,6 +18,8 @@ class DuckRacerTest {
         Collection<Reward> rewards = racer2.getRewards();
         System.out.println(rewards);
 
+
+
         racer2.win(Reward.DEBIT_CARD);
         System.out.println(rewards);
 
