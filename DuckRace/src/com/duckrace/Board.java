@@ -38,7 +38,7 @@ import java.util.*;
  *   17       17    Dom        1    DEBIT_CARD
  */
 
-class Board {
+public class Board {
 
     private final Map<Integer,String> studentIdMap = loadStudentIdMap();
     private final Map<Integer,DuckRacer> racerMap  = new TreeMap<>();
@@ -56,13 +56,13 @@ class Board {
         DuckRacer racer = null;
 
 
-        if (racerMap.containsKey(id)){
-            racer = racerMap.get(id);
+        if (racerMap.containsKey(id)){     //already in racerMap
+            racer = racerMap.get(id);      //fetch it
 
         }
         else {
 
-            racer = new DuckRacer(id, studentIdMap.get(id));
+            racer = new DuckRacer(id, studentIdMap.get(id)); //not in map
             racerMap.put(id, racer);
 
         }
@@ -75,10 +75,27 @@ class Board {
 
 
     public void show(){
+        //Maybe ian if-else
+        // if (racerMap.isEmpty())
+        //there are currently no results to show
+        //else
+        //do the work below
+
         Collection<DuckRacer> racers = racerMap.values();
 
+        String header =
+                "\n"+
+                "  Duck Race Results\n" +
+                "=====================\n" +
+                        "\n"+
+                "id    name     wins   rewards\n" +
+                "--    ----     ----   -------\n";
+
+        System.out.println(header);
+
+
         for (DuckRacer racer : racers) {
-            System.out.printf("%s %s %s %s\n",
+            System.out.printf("%s     %s    %s     %s\n",
                     racer.getId(), racer.getName(), racer.getWins(), racer.getRewards());
         }
     }
@@ -100,23 +117,27 @@ class Board {
     }
 
     private Map<Integer, String> loadStudentIdMap() {
-        Map<Integer, String> map = new HashMap<Integer, String>();
+        Map<Integer, String> map = new HashMap<>();
 
-        // read all liones from CSV file, and process each one into an integer and a string
+        // Specify the relative path to the file
+        String filePath = "conf/student-ids.csv";
+
         try {
-            List<String> lines = Files.readAllLines(Path.of("conf/student-ids.csv"));
+            List<String> lines = Files.readAllLines(Path.of(filePath));
 
-            //for each line split the string into tokens -> 1 Bullen
+            // Process each line to populate the map
             for (String line : lines) {
-                String[] tokens = line.split(","); // 1 and Bullen
-                Integer id = Integer.valueOf(tokens[0]);
-                String name = tokens[1];
+                String[] tokens = line.split(",");
+                Integer id = Integer.valueOf(tokens[0].trim());
+                String name = tokens[1].trim();
                 map.put(id, name);
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("Error reading file " + filePath + ": " + e.getMessage());
+            // Handle the exception (e.g., log it, throw a custom exception, etc.)
         }
+
         return map;
     }
 }
