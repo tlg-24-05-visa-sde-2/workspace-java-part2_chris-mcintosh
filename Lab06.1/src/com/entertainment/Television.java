@@ -114,4 +114,19 @@ public class Television implements Comparable<Television> {
         }
         return result;
     }
+
+    //NAMED , MEMBER-LEVEL INNER CLASSES
+    private class Tuner {
+        private int channel = 3;  // default channel for cable and satellite customers
+
+        public int getChannel() {
+            return this.channel;
+        }
+
+        public void setChannel(int channel) {
+            this.channel = channel;
+        }
+    }
+
+
 }
