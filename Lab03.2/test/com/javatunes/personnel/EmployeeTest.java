@@ -11,12 +11,17 @@ public class EmployeeTest {
     private Employee emp1;
     private Employee emp2;
 
-
     @Before
     public void setUp() {
-        emp1 = new SalariedEmployee("Chris", Date.valueOf("2020-05-08"));
-        emp2 = new SalariedEmployee("Chris", Date.valueOf("2020-05-08"));
+        emp1 = getEmployee();
+        emp2 = getEmployee();
     }
+        private static Employee getEmployee(){
+            return new Employee("Chris",Date.valueOf("2020-05-08") ) {
+                   public double pay() {return 0;}
+                   public double payTaxes() {return 0; }
+            } ;
+        }
 
     @Test
     public void equals_shouldReturnFasle_differentName_sameHireDate() {
@@ -37,4 +42,31 @@ public class EmployeeTest {
     public void equals_shouldReturnTrue_sameName_sameHireDate() {
         assertEquals(emp1, emp2);
     }
+
+    //NAMED MEMBER-LEVEL INNER CLASSES
+    //this is called a "mock" - a fake business type just for testing
+   private class DummyEmployee extends Employee {
+
+        public DummyEmployee() {
+        }
+
+        public DummyEmployee(String name, Date hireDate) {
+            super(name, hireDate);
+        }
+
+        /**
+         * All employees get paid, but they implement this differently.
+         * Method in base class but NO implementation.
+         */
+        @Override
+        public double pay() {
+            return 0;
+        }
+
+        @Override
+        public double payTaxes() {
+            return 0;
+        }
+    }
+
 }
