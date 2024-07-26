@@ -11,7 +11,7 @@ import java.io.IOException;
 
 public class DuckRaceApp {
     private Scanner scanner = new Scanner(System.in);
-    private Board board = new Board();
+    private Board board = Board.getInstance();
 
     public void execute(){
         welcome();

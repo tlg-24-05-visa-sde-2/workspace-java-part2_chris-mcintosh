@@ -1,6 +1,6 @@
 package com.duckrace;
 
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
@@ -38,10 +38,42 @@ import java.util.*;
  *   17       17    Dom        1    DEBIT_CARD
  */
 
-public class Board {
+public class Board implements Serializable {
+    private static final String DATA_FILE_PATH = "data/board.dat" ;
+    private static final String CONFIG_FILE_PATH = "conf/student-ids.csv" ;
+    /*
+     * If data/board.data exist, the application has been run before at least once.
+     * Therefor, re-create the Board object from the binary file.
+     *
+     * If the file is not there, this is the very first time the app has been run.
+     * Therefore, create and return new Board.
+     */
+    public static Board getInstance(){
+        Board board = null;
+
+
+        if(Files.exists(Path.of(DATA_FILE_PATH))){
+            try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(DATA_FILE_PATH))) {
+                board = (Board) in.readObject();
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        else {
+            board = new Board();
+        }
+         return board;
+    }
 
     private final Map<Integer,String> studentIdMap = loadStudentIdMap();
     private final Map<Integer,DuckRacer> racerMap  = new TreeMap<>();
+
+    // private ctor - prevent instantiation outside - only getInstance() can do this
+    private Board () {
+
+
+    }
 
     /*
      * Updates the board (racerMap) by making a DuckRacer win.
@@ -67,9 +99,21 @@ public class Board {
 
         }
         racer.win(reward);
+
+        save();
     }
 
-     /*
+    private void save() {
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(DATA_FILE_PATH))) {
+            out.writeObject(this); // write "me" to binary file ("I" am a Board object)
+
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    /*
       * TODO: render the data as we see it in the "real" application
       */
 
@@ -120,10 +164,9 @@ public class Board {
         Map<Integer, String> map = new HashMap<>();
 
         // Specify the relative path to the file
-        String filePath = "conf/student-ids.csv";
 
         try {
-            List<String> lines = Files.readAllLines(Path.of(filePath));
+            List<String> lines = Files.readAllLines(Path.of(CONFIG_FILE_PATH));
 
             // Process each line to populate the map
             for (String line : lines) {
@@ -134,7 +177,7 @@ public class Board {
             }
 
         } catch (IOException e) {
-            System.err.println("Error reading file " + filePath + ": " + e.getMessage());
+            System.err.println("Error reading file " + CONFIG_FILE_PATH + ": " + e.getMessage());
             // Handle the exception (e.g., log it, throw a custom exception, etc.)
         }
 
